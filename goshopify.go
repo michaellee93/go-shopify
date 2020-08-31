@@ -87,7 +87,7 @@ type Client struct {
 	Customer                   CustomerService
 	CustomerAddress            CustomerAddressService
 	Order                      OrderService
-	Fulfillment		   FulfillmentService
+	Fulfillment                FulfillmentService
 	DraftOrder                 DraftOrderService
 	Shop                       ShopService
 	Webhook                    WebhookService
@@ -111,6 +111,7 @@ type Client struct {
 	PriceRule                  PriceRuleService
 	InventoryItem              InventoryItemService
 	ShippingZone               ShippingZoneService
+	ProductListing             ProductListingService
 }
 
 // A general response error that follows a similar layout to Shopify's response
@@ -283,6 +284,7 @@ func NewClient(app App, shopName, token string, opts ...Option) *Client {
 	c.PriceRule = &PriceRuleServiceOp{client: c}
 	c.InventoryItem = &InventoryItemServiceOp{client: c}
 	c.ShippingZone = &ShippingZoneServiceOp{client: c}
+	c.ProductListing = &ProductListingServiceOp{client: c}
 
 	// apply any options
 	for _, opt := range opts {
