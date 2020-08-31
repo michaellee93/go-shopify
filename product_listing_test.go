@@ -274,7 +274,7 @@ func TestProductListingDelete(t *testing.T) {
 	setup()
 	defer teardown()
 
-	httpmock.RegisterResponder("DELETE", fmt.Sprintf("https://fooshop.myshopify.com/%s/products/1.json", client.pathPrefix),
+	httpmock.RegisterResponder("DELETE", fmt.Sprintf("https://fooshop.myshopify.com/%s/product_listings/1.json", client.pathPrefix),
 		httpmock.NewStringResponder(200, "{}"))
 
 	err := client.ProductListing.Delete(1)

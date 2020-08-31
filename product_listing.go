@@ -118,7 +118,6 @@ func (s *ProductListingServiceOp) Count(options interface{}) (int, error) {
 // Get individual product_listing by product ID
 func (s *ProductListingServiceOp) Get(productID int64, options interface{}) (*ProductListing, error) {
 	path := fmt.Sprintf("%s/%d.json", productListingBasePath, productID)
-	fmt.Println(path)
 	resource := new(ProductListingResource)
 	err := s.client.Get(path, resource, options)
 	return resource.ProductListing, err
@@ -139,11 +138,10 @@ func (s *ProductListingServiceOp) Publish(productID int64) (*ProductListing, err
 	wrappedData.ProductListing.ProductID = productID
 	resource := new(ProductListingResource)
 	err := s.client.Put(path, wrappedData, resource)
-	fmt.Printf("%+v\n\n\n", resource)
 	return resource.ProductListing, err
 }
 
 // Delete unpublishes an existing product from your sales channel app.
 func (s *ProductListingServiceOp) Delete(productID int64) error {
-	return s.client.Delete(fmt.Sprintf("%s/%d.json", productsBasePath, productID))
+	return s.client.Delete(fmt.Sprintf("%s/%d.json", productListingBasePath, productID))
 }
