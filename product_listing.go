@@ -9,19 +9,15 @@ import (
 const productListingBasePath = "product_listings"
 const productsListingResourceName = "product_listings"
 
-// linkRegex is used to extract pagination links from product search results.
-//var linkRegex = regexp.MustCompile(`^ *<([^>]+)>; rel="(previous|next)" *$`)
-
 // ProductListingService is an interface for interfacing with the product listing endpoints
 // of the Shopify API.
-// See: https://help.shopify.com/api/reference/product_listings
+// See: https://shopify.dev/docs/admin-api/rest/reference/sales-channels/productlisting
 type ProductListingService interface {
 	List(interface{}) ([]ProductListing, error)
 	ListWithPagination(interface{}) ([]ProductListing, *Pagination, error)
 	Count(interface{}) (int, error)
 	Get(int64, interface{}) (*ProductListing, error)
-	GetProductIDs(interface{}) ([]int64, error)
-	//GetProductIDsWithPagination????() ([]int64, *Pagination, error)
+	GetProductIDs(interface{}) ([]ProductID, error)
 	Publish(int64) (*ProductListing, error)
 	Delete(int64) error
 }
@@ -61,7 +57,12 @@ type ProductsListingsResource struct {
 
 // Represents the result from the product_listings/product_ids.json endpoint
 type ProductListingIDsResource struct {
-	ProductIDs []int64 `json:"product_ids"`
+	ProductIDs []ProductID `json:"product_ids"`
+}
+
+// ProductID represents a products unique Shopify identifier
+type ProductID struct {
+	ProductID int64 `json:"product_id"`
 }
 
 // Resource which create product_listing endpoint expects in request body
@@ -74,7 +75,7 @@ type ProductListingIDsResource struct {
 // }
 type ProductListingPublishResource struct {
 	ProductListing struct {
-		ProductID int64 `json:"product_id"`
+		ProductID
 	} `json:"product_listing"`
 }
 
@@ -124,7 +125,7 @@ func (s *ProductListingServiceOp) Get(productID int64, options interface{}) (*Pr
 }
 
 // GetProductIDs lists all product IDs that are published to your sales channel
-func (s *ProductListingServiceOp) GetProductIDs(options interface{}) ([]int64, error) {
+func (s *ProductListingServiceOp) GetProductIDs(options interface{}) ([]ProductID, error) {
 	path := fmt.Sprintf("%s/product_ids.json", productListingBasePath)
 	resource := new(ProductListingIDsResource)
 	err := s.client.Get(path, resource, options)
@@ -135,7 +136,7 @@ func (s *ProductListingServiceOp) GetProductIDs(options interface{}) ([]int64, e
 func (s *ProductListingServiceOp) Publish(productID int64) (*ProductListing, error) {
 	path := fmt.Sprintf("%s/%v.json", productListingBasePath, productID)
 	wrappedData := new(ProductListingPublishResource)
-	wrappedData.ProductListing.ProductID = productID
+	wrappedData.ProductListing.ProductID.ProductID = productID
 	resource := new(ProductListingResource)
 	err := s.client.Put(path, wrappedData, resource)
 	return resource.ProductListing, err
