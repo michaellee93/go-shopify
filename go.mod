@@ -1,9 +1,8 @@
-module github.com/bold-commerce/go-shopify/v3
+module github.com/michaellee93/go-shopify
 
-go 1.13
+go 1.15
 
 require (
 	github.com/google/go-querystring v1.0.0
-	github.com/jarcoal/httpmock v1.0.4
-	github.com/shopspring/decimal v0.0.0-20200105231215-408a2507e114
+	github.com/shopspring/decimal v1.2.0
 )
