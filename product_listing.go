@@ -17,7 +17,7 @@ type ProductListingService interface {
 	ListWithPagination(interface{}) ([]ProductListing, *Pagination, error)
 	Count(interface{}) (int, error)
 	Get(int64, interface{}) (*ProductListing, error)
-	GetProductIDs(interface{}) ([]ProductID, error)
+	GetProductIDs(interface{}) ([]int64, error)
 	Publish(int64) (*ProductListing, error)
 	Delete(int64) error
 }
@@ -57,7 +57,7 @@ type ProductsListingsResource struct {
 
 // Represents the result from the product_listings/product_ids.json endpoint
 type ProductListingIDsResource struct {
-	ProductIDs []ProductID `json:"product_ids"`
+	ProductIDs []int64 `json:"product_ids"`
 }
 
 // ProductID represents a products unique Shopify identifier
@@ -125,7 +125,7 @@ func (s *ProductListingServiceOp) Get(productID int64, options interface{}) (*Pr
 }
 
 // GetProductIDs lists all product IDs that are published to your sales channel
-func (s *ProductListingServiceOp) GetProductIDs(options interface{}) ([]ProductID, error) {
+func (s *ProductListingServiceOp) GetProductIDs(options interface{}) ([]int64, error) {
 	path := fmt.Sprintf("%s/product_ids.json", productListingBasePath)
 	resource := new(ProductListingIDsResource)
 	err := s.client.Get(path, resource, options)
