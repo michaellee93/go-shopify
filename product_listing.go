@@ -60,11 +60,6 @@ type ProductListingIDsResource struct {
 	ProductIDs []int64 `json:"product_ids"`
 }
 
-// ProductID represents a products unique Shopify identifier
-type ProductID struct {
-	ProductID int64 `json:"product_id"`
-}
-
 // Resource which create product_listing endpoint expects in request body
 // e.g.
 // PUT /admin/api/2020-07/product_listings/921728736.json
@@ -75,7 +70,7 @@ type ProductID struct {
 // }
 type ProductListingPublishResource struct {
 	ProductListing struct {
-		ProductID
+		ProductID int64 `json:"product_id"`
 	} `json:"product_listing"`
 }
 
@@ -136,7 +131,7 @@ func (s *ProductListingServiceOp) GetProductIDs(options interface{}) ([]int64, e
 func (s *ProductListingServiceOp) Publish(productID int64) (*ProductListing, error) {
 	path := fmt.Sprintf("%s/%v.json", productListingBasePath, productID)
 	wrappedData := new(ProductListingPublishResource)
-	wrappedData.ProductListing.ProductID.ProductID = productID
+	wrappedData.ProductListing.ProductID = productID
 	resource := new(ProductListingResource)
 	err := s.client.Put(path, wrappedData, resource)
 	return resource.ProductListing, err
